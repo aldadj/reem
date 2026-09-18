@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     libjpeg62-turbo-dev \
     libfreetype6-dev \
     libzip-dev \
+    libonig-dev \
     unzip \
     git \
     libpq-dev \
@@ -18,7 +19,9 @@ RUN apt-get update && apt-get install -y \
         pcntl \
         bcmath \
         gd \
-        zip
+        zip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
