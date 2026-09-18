@@ -136,7 +136,7 @@ class VideoController extends Controller
             ]);
 
             return response()->json([
-                'message' => 'Une erreur inattendue est survenue lors de la publication de la vidéo.',
+                'message' => 'Erreur serveur: ' . $e->getMessage(),
             ], 500);
         }
     }
