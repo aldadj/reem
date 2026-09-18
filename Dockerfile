@@ -1,6 +1,5 @@
 FROM php:8.3-apache
 
-# Extensions PHP nécessaires à Laravel
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg62-turbo-dev \
@@ -21,26 +20,25 @@ RUN apt-get update && apt-get install -y \
         gd \
         zip
 
-# Installer Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Copier le projet
 COPY . .
 
-# Installer les dépendances PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# Configuration Apache pour Laravel
 RUN a2enmod rewrite
 
-COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
+RUN printf '<VirtualHost *:80>\n\
+    DocumentRoot /var/www/html/public\n\
+    <Directory /var/www/html/public>\n\
+        AllowOverride All\n\
+        Require all granted\n\
+    </Directory>\n\
+</VirtualHost>\n' > /etc/apache2/sites-available/000-default.conf
 
-# Permissions Laravel
-RUN chown -R www-data:www-data \
-    storage \
-    bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache
 
 EXPOSE 80
 
