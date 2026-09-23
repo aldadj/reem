@@ -17,6 +17,7 @@ Route::get('/videos', [VideoController::class, 'index']); // Flux vidéo
 Route::get('/videos/{id}/comments', [CommentController::class, 'index']);
 Route::get('/users/{id}', [\App\Http\Controllers\Api\UserController::class, 'show']);
 Route::get('/users/{id}/videos', [VideoController::class, 'userVideosById']);
+Route::get('/test-video-storage', [VideoController::class, 'testVideoStorage']);
 
 // --- ROUTES PROTÉGÉES (Sanctum) ---
 Route::middleware('auth:sanctum')->group(function () {

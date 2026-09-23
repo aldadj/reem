@@ -290,6 +290,17 @@ class VideoController extends Controller
 
         return response()->json($videos, 200);
     }
+//temporaire
+public function testVideoStorage()
+{
+    $path = 'videos/lcBJZAWEcllUG5Fcmn94Kd0oSTjNZfk7ZdNp9X1j.mp4';
+
+    return response()->json([
+        'exists' => Storage::disk('public')->exists($path),
+        'path' => Storage::disk('public')->path($path),
+        'url' => '/storage/' . $path,
+    ]);
+}
 
 //supression de video
     public function destroy(Request $request, int $id)
