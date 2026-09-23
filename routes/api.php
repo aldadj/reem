@@ -7,29 +7,7 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request; // Importation manquante corrigée au passage
 use Illuminate\Support\Facades\Route;
-use Cloudinary\Cloudinary;
 
-//cloudinary temporaire
-Route::get('/test-cloudinary', function () {
-    try {
-        $cloudinary = new Cloudinary();
-
-        $result = $cloudinary->uploadApi()->upload(
-            'https://res.cloudinary.com/demo/image/upload/sample.jpg'
-        );
-
-        return response()->json([
-            'success' => true,
-            'secure_url' => $result['secure_url'] ?? null,
-            'resource_type' => $result['resource_type'] ?? null,
-        ]);
-    } catch (\Throwable $e) {
-        return response()->json([
-            'success' => false,
-            'error' => $e->getMessage(),
-        ], 500);
-    }
-});
 
 // --- ROUTES PUBLIQUES ---
 Route::post('/register', [AuthController::class, 'register']);
