@@ -10,6 +10,7 @@ use App\Services\VideoThumbnailService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Cloudinary\Cloudinary;
 
 class VideoController extends Controller
 {
@@ -85,7 +86,17 @@ class VideoController extends Controller
             $visibility = $request->input('visibility', 'public');
 
             if ($request->hasFile('video') && $request->file('video')->isValid()) {
-                $path = $request->file('video')->store('videos', 'public');
+                $cloudinary = new Cloudinary();
+
+$uploadResult = $cloudinary->uploadApi()->upload(
+    $request->file('video')->getRealPath(),
+    [
+        'resource_type' => 'video',
+        'folder' => 'reem/videos',
+    ]
+);
+
+$videoUrl = $uploadResult['secure_url'];
                 $thumbnailPath = null;
 
                 if ($request->file('thumbnail')) {
@@ -104,7 +115,7 @@ class VideoController extends Controller
                     'user_id' => $request->user()->id,
                     'title' => substr($videoTitle, 0, 255),
                     'description' => $videoDescription,
-                    'video_path' => Storage::url($path),
+                    'video_path' => $videoUrl,
                     'thumbnail_path' => $thumbnailPath ? Storage::url($thumbnailPath) : null,
                     'visibility' => $visibility,
                 ]);
